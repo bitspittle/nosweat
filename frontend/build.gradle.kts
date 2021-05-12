@@ -1,6 +1,6 @@
 // Add compose gradle plugin
 plugins {
-    kotlin("multiplatform") version "1.4.32"
+    kotlin("multiplatform")
     id("org.jetbrains.compose") version "0.0.0-web-dev-11"
 }
 

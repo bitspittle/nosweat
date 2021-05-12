@@ -1,0 +1,21 @@
+[versions]
+kgraphql = "0.17.8"
+kotlin = "1.4.3"
+ktor = "1.5.4"
+logback = "1.2.3"
+
+[libraries]
+kgraphql-core = { module = "com.apurebase:kgraphql", version.ref = "kgraphql" }
+kgraphql-ktor = { module = "com.apurebase:kgraphql-ktor", version.ref = "kgraphql" }
+
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin" }
+
+ktor-core = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-tests = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
+
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+[bundles]
+kgraphql = [ "kgraphql-core", "kgraphql-ktor" ]
+kotlin-jvm = [ "kotlin-stdlib", "kotlinx-coroutines" ]
