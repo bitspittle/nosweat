@@ -1,13 +1,13 @@
-package screens
+package bitspittle.nosweat.frontend.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.web.elements.Button
 import androidx.compose.web.elements.Div
 import androidx.compose.web.elements.Text
 import org.jetbrains.compose.common.foundation.layout.Row
-import screens.nav.Screen
-import screens.nav.ScreenNavigator
-import style.AppStylesheet
+import bitspittle.nosweat.frontend.screens.nav.Screen
+import bitspittle.nosweat.frontend.screens.nav.ScreenNavigator
+import bitspittle.nosweat.frontend.style.AppStylesheet
 
 @Composable
 fun MainScreen(navigator: ScreenNavigator) {

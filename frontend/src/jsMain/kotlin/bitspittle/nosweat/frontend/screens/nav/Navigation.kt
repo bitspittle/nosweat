@@ -1,12 +1,12 @@
-package screens.nav
+package bitspittle.nosweat.frontend.screens.nav
 
 import androidx.compose.runtime.*
 import androidx.compose.web.css.Style
 import androidx.compose.web.elements.Section
 import androidx.compose.web.renderComposable
-import screens.LoginScreen
-import screens.MainScreen
-import style.AppStylesheet
+import bitspittle.nosweat.frontend.screens.LoginScreen
+import bitspittle.nosweat.frontend.screens.MainScreen
+import bitspittle.nosweat.frontend.style.AppStylesheet
 import kotlin.math.min
 
 interface ScreenNavigator {

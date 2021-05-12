@@ -1,16 +1,13 @@
-package screens
+package bitspittle.nosweat.frontend.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.elements.Button
-import androidx.compose.web.elements.Div
 import androidx.compose.web.elements.Input
 import androidx.compose.web.elements.Text
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
-import screens.nav.Screen
-import screens.nav.ScreenNavigator
-import style.AppStylesheet
+import bitspittle.nosweat.frontend.screens.nav.ScreenNavigator
 
 @Composable
 fun LoginScreen(navigator: ScreenNavigator) {

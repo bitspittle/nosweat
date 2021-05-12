@@ -1,4 +1,4 @@
-package style
+package bitspittle.nosweat.frontend.style
 
 import androidx.compose.web.css.*
 
