@@ -1,4 +1,4 @@
-package bitspittle.nosweat.model
+package bitspittle.nosweat.backend.model
 
 enum class Episode {
     NEWHOPE, EMPIRE, JEDI

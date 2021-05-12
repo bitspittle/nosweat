@@ -1,9 +1,9 @@
-package bitspittle.nosweat.server
+package bitspittle.nosweat.backend.server
 
-import bitspittle.nosweat.model.Droid
-import bitspittle.nosweat.model.Episode
-import bitspittle.nosweat.model.Human
-import bitspittle.nosweat.model.*
+import bitspittle.nosweat.backend.model.Droid
+import bitspittle.nosweat.backend.model.Episode
+import bitspittle.nosweat.backend.model.Human
+import bitspittle.nosweat.backend.model.*
 import com.apurebase.kgraphql.GraphQL
 import io.ktor.application.*
 import io.ktor.server.netty.*

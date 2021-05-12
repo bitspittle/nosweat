@@ -28,5 +28,5 @@ tasks.withType<KotlinCompile> {
 }
 
 application {
-    mainClass.set("bitspittle.nosweat.server.ApplicationKt")
+    mainClass.set("bitspittle.nosweat.backend.server.ApplicationKt")
 }
