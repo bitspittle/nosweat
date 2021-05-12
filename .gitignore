@@ -16,6 +16,7 @@
 /.idea/jarRepositories.xml
 /.idea/*.iml
 /.idea/modules
+/.idea/libraries-with-intellij-classes.xml
 
 .DS_Store
 build
