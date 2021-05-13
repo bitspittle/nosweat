@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.bundles.kgraphql)
     implementation(libs.ktor.core)
     implementation(libs.logback)
+    implementation(project(":model"))
 
     testImplementation(libs.ktor.server.tests)
 }

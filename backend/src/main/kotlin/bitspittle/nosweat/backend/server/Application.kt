@@ -1,15 +1,13 @@
 package bitspittle.nosweat.backend.server
 
-import bitspittle.nosweat.backend.model.Droid
-import bitspittle.nosweat.backend.model.Episode
-import bitspittle.nosweat.backend.model.Human
-import bitspittle.nosweat.backend.model.*
+import bitspittle.nosweat.model.*
 import com.apurebase.kgraphql.GraphQL
 import io.ktor.application.*
 import io.ktor.server.netty.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
+@Suppress("unused") // Referenced by Ktor
 fun Application.module(testing: Boolean = false) {
     install(GraphQL) {
         playground = true

@@ -11,3 +11,4 @@ rootProject.name = "nosweat"
 
 include("frontend")
 include("backend")
+include("model")
