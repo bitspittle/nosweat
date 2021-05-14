@@ -9,4 +9,4 @@ application for all users).
 ## Technology
 
 This project uses [Web Compose](https://compose-web.ui.pages.jetbrains.team/) for the frontend, pure Kotlin for the
-backend, and [yjs](https://github.com/yjs/yjs) plus [graphql](https://graphql.org/) to communicate between them.
+backend, and [graphql](https://graphql.org/) to communicate between them.
