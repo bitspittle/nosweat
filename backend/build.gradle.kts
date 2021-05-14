@@ -16,7 +16,7 @@ repositories {
 dependencies {
     implementation(libs.bundles.kotlin.jvm)
     implementation(libs.bundles.kgraphql)
-    implementation(libs.ktor.core)
+    implementation(libs.bundles.ktor.common)
     implementation(libs.logback)
     implementation(project(":model"))
 

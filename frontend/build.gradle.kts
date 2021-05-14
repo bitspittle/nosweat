@@ -1,7 +1,7 @@
 // Add compose gradle plugin
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "0.0.0-web-dev-11"
+    id("org.jetbrains.compose") version "0.0.0-web-dev-12"
 }
 
 group = "bitspittle"
@@ -25,6 +25,11 @@ kotlin {
         binaries.executable()
     }
     sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":model"))
+            }
+        }
         val jsMain by getting {
             dependencies {
                 implementation(compose.web.web)

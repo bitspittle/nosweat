@@ -1,3 +1,3 @@
-import bitspittle.nosweat.frontend.screens.nav.startApp
+import bitspittle.nosweat.frontend.screens.support.startApp
 
 fun main() = startApp()

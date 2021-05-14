@@ -3,41 +3,52 @@ package bitspittle.nosweat.backend.server
 import bitspittle.nosweat.model.*
 import com.apurebase.kgraphql.GraphQL
 import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.serialization.*
 import io.ktor.server.netty.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 @Suppress("unused") // Referenced by Ktor
 fun Application.module(testing: Boolean = false) {
+    install(CORS) {
+        header(HttpHeaders.ContentType) // Needed to allow JSON content
+        anyHost()
+    }
+    install(ContentNegotiation) {
+        json()
+    }
     install(GraphQL) {
         playground = true
+        endpoint = "/api"
         schema {
             configure {
                 useDefaultPrettyPrinter = true
             }
 
-            // create query "hero" which returns instance of Character
-            query("hero") {
-                resolver { episode: Episode ->
-                    when (episode) {
-                        Episode.NEWHOPE, Episode.JEDI -> r2d2
-                        Episode.EMPIRE -> luke
-                    }
+            enum<Day>()
+            enum<Month>()
+
+            type<Date>()
+            type<Email>()
+            type<Exercise>()
+            type<Login>()
+            type<User>()
+            type<Routine>()
+            type<Weight>()
+            type<Workout>()
+
+            query("login") {
+                resolver { username: String, password: String ->
+                    User("asdfasdf", username)
                 }
             }
-
-            // create query "heroes" which returns list of luke and r2d2
-            query("heroes") {
-                resolver { -> listOf(luke, r2d2) }
+            query("user") {
+                resolver { ->
+                    User("fakeid", "fakename")
+                }
             }
-
-            // 1kotlin classes need to be registered with "type" method
-            // to be included in created schema type system
-            // class Character is automatically included,
-            // as it is return type of both created queries
-            type<Droid>()
-            type<Human>()
-            enum<Episode>()
         }
     }
 }

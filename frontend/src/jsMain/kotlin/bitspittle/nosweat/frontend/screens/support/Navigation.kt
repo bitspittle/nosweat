@@ -1,9 +1,10 @@
-package bitspittle.nosweat.frontend.screens.nav
+package bitspittle.nosweat.frontend.screens.support
 
 import androidx.compose.runtime.*
 import androidx.compose.web.css.Style
 import androidx.compose.web.elements.Section
 import androidx.compose.web.renderComposable
+import bitspittle.nosweat.frontend.graphql.HttpMessenger
 import bitspittle.nosweat.frontend.screens.LoginScreen
 import bitspittle.nosweat.frontend.screens.MainScreen
 import bitspittle.nosweat.frontend.style.AppStylesheet
@@ -16,36 +17,36 @@ interface ScreenNavigator {
 
 sealed class Screen {
     @Composable
-    internal abstract fun compose(navigator: ScreenNavigator)
+    internal abstract fun compose(ctx: Context)
 
     object Main : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = MainScreen(navigator)
+        override fun compose(ctx: Context) = MainScreen(ctx)
     }
 
     object Login : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = LoginScreen(navigator)
+        override fun compose(ctx: Context) = LoginScreen(ctx)
     }
 
     object CreateAccount : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = Unit
+        override fun compose(ctx: Context) = Unit
     }
 
     object Overview : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = Unit
+        override fun compose(ctx: Context) = Unit
     }
 
     object Workout : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = Unit
+        override fun compose(ctx: Context) = Unit
     }
 
     object WorkoutComplete : Screen() {
         @Composable
-        override fun compose(navigator: ScreenNavigator) = Unit
+        override fun compose(ctx: Context) = Unit
     }
 }
 
@@ -72,14 +73,14 @@ private class ScreenNavigatorImpl(initialScreen: Screen) : ScreenNavigator {
 
 fun startApp() {
     val navigator = ScreenNavigatorImpl(Screen.Main)
+    val ctx = Context(navigator, HttpMessenger())
 
     renderComposable(rootElementId = "root") {
         val activeScreen by navigator.activeScreen
 
         Style(AppStylesheet)
         Section(attrs = { classes(AppStylesheet.container) }) {
-            activeScreen.compose(navigator)
+            activeScreen.compose(ctx)
         }
     }
-
 }
