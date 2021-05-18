@@ -13,6 +13,11 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+// compile bytecode to java 8 (default is java 6)
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 // Enable JS(IR) target and add dependencies
 kotlin {
     js(IR) {
