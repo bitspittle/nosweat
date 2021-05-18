@@ -7,4 +7,8 @@ import kotlin.coroutines.CoroutineContext
 class ApplicationScope : CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext = job
+
+    fun cancel() {
+        job.cancel()
+    }
 }

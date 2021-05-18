@@ -8,18 +8,15 @@ import androidx.compose.web.elements.Text
 import bitspittle.nosweat.frontend.screens.support.ApplicationScope
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.model.graphql.queries.LoginQuery
-import kotlinx.coroutines.CoroutineScope
+import bitspittle.nosweat.model.graphql.queries.LoginResponse
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
-import org.w3c.xhr.XMLHttpRequest
-import kotlin.js.json
 
 @Composable
 fun LoginScreen(ctx: Context) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val scope = remember { ApplicationScope() }
 
     Row {
         Column {
@@ -44,8 +41,12 @@ fun LoginScreen(ctx: Context) {
         }
         Button(attrs = {
             onClick {
+                val scope = ApplicationScope()
                 scope.launch {
-                    val user = ctx.messenger.send(LoginQuery(username, password))
+                    when (val result = ctx.messenger.send(LoginQuery(username, password))) {
+                        is LoginResponse.Success -> println(result.user)
+                        is LoginResponse.Error -> println(result.message)
+                    }
                     // TODO: Go to a new screen with the logged in user
                 }
             }
