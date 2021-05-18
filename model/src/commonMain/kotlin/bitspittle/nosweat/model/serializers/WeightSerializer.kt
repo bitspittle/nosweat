@@ -15,10 +15,7 @@ import kotlinx.serialization.encoding.Encoder
 private class WeightSurrogate(val value: Float, val type: String)
 
 object WeightSerializer : KSerializer<Weight> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Weight") {
-        element<Float>("value")
-        element<String>("type")
-    }
+    override val descriptor: SerialDescriptor = WeightSurrogate.serializer().descriptor
 
     override fun serialize(encoder: Encoder, value: Weight) {
         @Suppress("UnnecessaryVariable") // rename for readability
