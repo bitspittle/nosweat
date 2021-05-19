@@ -9,6 +9,8 @@ pluginManagement {
 
 rootProject.name = "nosweat"
 
-include("frontend")
-include("backend")
-include("model")
+include(":frontend")
+include(":backend")
+include(":model")
+
+includeBuild("external/truthish")

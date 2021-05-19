@@ -1,0 +1,3 @@
+[submodule "external/truthish"]
+	path = external/truthish
+	url = https://github.com/bitspittle/truthish

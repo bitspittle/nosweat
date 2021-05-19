@@ -8,7 +8,6 @@ version = "1.0-SNAPSHOT"
 
 // Add maven repositories
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
@@ -47,7 +46,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(libs.kotlin.reflect)
-                implementation(libs.truthish.common)
+                implementation(libs.truthish)
             }
         }
 
@@ -57,7 +56,6 @@ kotlin {
                 implementation(kotlin("test-junit"))
                 implementation(libs.kotlintestrunner.junit5)
                 implementation(libs.bundles.junit5)
-                implementation(libs.truthish.jvm)
             }
         }
 

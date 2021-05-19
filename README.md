@@ -8,23 +8,40 @@ application for all users).
 
 ## Build steps
 
-This project depends on [truthish](https://github.com/bitspittle/truthish) for multiplatform test logic, which isn't
-hosted at the time of writing these docs, so first:
+```shell
+$ git clone https://github.com/bitspittle/nosweat
+$ cd nosweat
+```
 
-* `git clone https://github.com/bitspittle/truthish`
-* `cd truthish`
-* `./gradlew publishToLocalMaven`
+### Submodule Dependencies
 
-Then you should be able to run this project by starting up the server:
+(You only need to do the steps in this section once)
 
-* `cd nosweat`
-* `./gradlew :backend:run`
+Fetch submodule dependencies:
+
+```shell
+$ cd external
+$ git submodule init
+$ git submodule update
+```
+
+### Run Server and Client
+
+Then, navigate back to the root folder. At this point, you should be start up the server:
+
+```shell
+$ pwd
+.../path/to/nosweat
+$ ./gradlew :backend:run
+```
   
-At this point, you can start up the browser to test your changes:
+Then, start up the browser to run the app:
 
-* `./gradlew :frontend:jsBrowserRun`
+```shell
+$ ./gradlew :frontend:jsBrowserRun
+```
 
 ## Technology
 
-This project uses [Web Compose](https://compose-web.ui.pages.jetbrains.team/) for the frontend, pure Kotlin for the
-backend, and [graphql](https://graphql.org/) to communicate between them.
+This project uses [Web Compose](https://compose-web.ui.pages.jetbrains.team/) for the frontend, [Ktor](https://ktor.io/)
+for the backend server, and the [graphql](https://graphql.org/) protocol to communicate between them.
