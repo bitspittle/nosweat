@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.bundles.kotlin.jvm)
     implementation(libs.bundles.kgraphql)
     implementation(libs.bundles.ktor.common)
+    implementation(libs.jedis)
     implementation(libs.logback)
     implementation(project(":model"))
 

@@ -19,4 +19,13 @@ object AppStylesheet : StyleSheet() {
         fontWeight(FontWeight.LIGHTER)
         textAlign(TextAlign.CENTER)
     }
+
+    val clickable by style {
+        cursor(Cursor.POINTER)
+        color(Color("blue"))
+    }
+
+    val error by style {
+        color(Color("red"))
+    }
 }

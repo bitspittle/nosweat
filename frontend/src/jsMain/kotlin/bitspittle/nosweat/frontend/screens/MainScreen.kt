@@ -28,7 +28,7 @@ fun MainScreen(ctx: Context) {
         }
         Div {
             Button(attrs = {
-                onClick { }
+                onClick { ctx.navigator.enter(Screen.CreateAccount) }
             }) {
                 Text("Create Account")
             }

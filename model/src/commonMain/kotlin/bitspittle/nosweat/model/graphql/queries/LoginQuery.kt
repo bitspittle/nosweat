@@ -1,26 +1,26 @@
 package bitspittle.nosweat.model.graphql.queries
 
 import bitspittle.nosweat.model.User
+import bitspittle.nosweat.model.graphql.Request
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
 
 
-sealed class LoginResponse {
-    class Success(val user: User) : LoginResponse()
-    class Error(val message: String) : LoginResponse()
-}
+sealed class LoginResponse
+class LoginSuccess(val user: User) : LoginResponse()
+class LoginError(val message: String) : LoginResponse()
 
 data class LoginQuery(
     val username: String,
     val password: String,
-) : Query<LoginResponse> {
-    override fun toQueryString(): String {
+) : Request<LoginResponse> {
+    override fun intoString(): String {
         return """
             query LoginQuery {
                 login(username: "$username", password: "$password") {
-                    ... on Success {
+                    ... on LoginSuccess {
                         user {
                             id
                             username
@@ -28,7 +28,7 @@ data class LoginQuery(
                             email { value }
                         }
                     }
-                    ... on Error {
+                    ... on LoginError {
                         message
                     }
                 }
@@ -39,8 +39,8 @@ data class LoginQuery(
     override fun handleResponse(response: JsonObject): LoginResponse {
         val loginResponse = response["login"] as JsonObject
         return loginResponse["user"]?.let {
-            LoginResponse.Success(Json.decodeFromJsonElement(it))
-        } ?: LoginResponse.Error((loginResponse["message"] as JsonPrimitive).content)
+            LoginSuccess(Json.decodeFromJsonElement(it))
+        } ?: LoginError((loginResponse["message"] as JsonPrimitive).content)
     }
 }
 

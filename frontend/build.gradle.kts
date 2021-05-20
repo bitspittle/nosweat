@@ -26,6 +26,10 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = "nosweat.js"
             }
+            runTask {
+                // Avoid conflicting with background server
+                devServer = devServer!!.copy(port = 8081)
+            }
         }
         binaries.executable()
     }

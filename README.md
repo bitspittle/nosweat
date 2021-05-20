@@ -25,6 +25,28 @@ $ git submodule init
 $ git submodule update
 ```
 
+### Redis
+
+The server uses Redis as a data store. You will need to download, install, and run a redis server before starting up the
+backend.
+
+See also: https://redis.io/topics/quickstart
+
+Excerpt:
+```shell
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+```
+
+then:
+
+```shell
+cd src/
+./redis-server
+```
+
 ### Run Server and Client
 
 Then, navigate back to the root folder. At this point, you should be start up the server:
@@ -43,5 +65,23 @@ $ ./gradlew :frontend:jsBrowserRun
 
 ## Technology
 
-This project uses [Web Compose](https://compose-web.ui.pages.jetbrains.team/) for the frontend, [Ktor](https://ktor.io/)
-for the backend server, and the [graphql](https://graphql.org/) protocol to communicate between them.
+This project uses:
+
+* [Web Compose](https://compose-web.ui.pages.jetbrains.team/) for the frontend
+* [Ktor](https://ktor.io/) for the backend server
+* [Redis](https://redis.io/) for the backend database
+* [GraphQL](https://graphql.org/) for the protocol to communicate between frontend and backend
+
+## Troubleshooting
+
+---
+
+Q: When I run the backend, it immediately exits with `JedisConnectionException: Could not get a resource from the pool`
+
+A: You need to run `redis-server` first. See the [Redis](#Redis) section. 
+
+---
+
+Q: ?
+
+A: ?

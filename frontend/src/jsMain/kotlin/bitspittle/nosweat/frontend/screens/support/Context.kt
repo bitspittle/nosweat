@@ -5,4 +5,5 @@ import bitspittle.nosweat.model.graphql.Messenger
 class Context(
     val navigator: ScreenNavigator,
     val messenger: Messenger,
+    val state: AppState,
 )

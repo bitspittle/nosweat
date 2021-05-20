@@ -9,18 +9,23 @@ import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
 import bitspittle.nosweat.frontend.screens.support.swapWith
 import bitspittle.nosweat.frontend.style.AppStylesheet
-import bitspittle.nosweat.model.graphql.queries.LoginError
-import bitspittle.nosweat.model.graphql.queries.LoginQuery
-import bitspittle.nosweat.model.graphql.queries.LoginSuccess
+import bitspittle.nosweat.model.graphql.mutations.CreateAccountError
+import bitspittle.nosweat.model.graphql.mutations.CreateAccountMutation
+import bitspittle.nosweat.model.graphql.mutations.CreateAccountSuccess
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
-fun LoginScreen(ctx: Context) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun CreateAccountScreen(ctx: Context) {
+    var username by remember {
+        mutableStateOf(ctx.state.username ?: "")
+            .also { ctx.state.username = "" }
+    }
+    var password1 by remember { mutableStateOf("") }
+    var password2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+
 
     Row {
         Column {
@@ -37,28 +42,38 @@ fun LoginScreen(ctx: Context) {
             Text("Password")
             Input(
                 InputType.Password,
-                password,
+                password1,
                 attrs = {
-                    onTextInput { event -> password = event.inputValue }
+                    onTextInput { event -> password1 = event.inputValue }
+                }
+            )
+        }
+        Column {
+            Text("Repeat password")
+            Input(
+                InputType.Password,
+                password2,
+                attrs = {
+                    onTextInput { event -> password2 = event.inputValue }
                 }
             )
         }
         Div {
             Button(attrs = {
-                disabled(username.isEmpty() || password.isEmpty())
+                disabled(username.isEmpty() || password1.isEmpty() || password1 != password2)
                 onClick {
-                    errorMessage = ""
                     val scope = ApplicationScope()
                     scope.launch {
-                        when (val result = ctx.messenger.send(LoginQuery(username, password))) {
-                            is LoginSuccess -> ctx.state.user = result.user
-                            is LoginError -> errorMessage = result.message
+                        errorMessage = ""
+                        when (val result = ctx.messenger.send(CreateAccountMutation(username, password1))) {
+                            is CreateAccountSuccess -> ctx.state.user = result.user
+                            is CreateAccountError -> errorMessage = result.message
                         }
                         // TODO: Go to a new screen with the logged in user
                     }
                 }
             }) {
-                Text("Log In")
+                Text("Create Account")
             }
         }
         Div {
@@ -70,21 +85,8 @@ fun LoginScreen(ctx: Context) {
         }
 
         if (errorMessage.isNotBlank()) {
-            Div {
-                Span(attrs = { classes(AppStylesheet.error) }) {
-                    Text(errorMessage)
-                }
-                Text(" - ")
-                A(
-                    attrs = {
-                        classes(AppStylesheet.clickable)
-                        onClick {
-                            ctx.state.username = username
-                            ctx.navigator.swapWith(Screen.CreateAccount)
-                        }
-                    }) {
-                    Text("Create account?")
-                }
+            Div(attrs = { classes(AppStylesheet.error) }) {
+                Text(errorMessage)
             }
         }
     }

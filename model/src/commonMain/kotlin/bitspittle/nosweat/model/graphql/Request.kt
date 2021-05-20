@@ -1,13 +1,13 @@
-package bitspittle.nosweat.model.graphql.queries
+package bitspittle.nosweat.model.graphql
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 /**
- * A base class for sending GraphQL queries
+ * A base class for sending GraphQL queries / mutations
  */
-interface Query<T> {
-    fun toQueryString(): String
+interface Request<T> {
+    fun intoString(): String
 
     /**
      * Return a successfully parsed `T` or throw an exception

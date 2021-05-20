@@ -5,15 +5,23 @@ import androidx.compose.web.css.Style
 import androidx.compose.web.elements.Section
 import androidx.compose.web.renderComposable
 import bitspittle.nosweat.frontend.graphql.HttpMessenger
+import bitspittle.nosweat.frontend.screens.CreateAccountScreen
 import bitspittle.nosweat.frontend.screens.LoginScreen
 import bitspittle.nosweat.frontend.screens.MainScreen
 import bitspittle.nosweat.frontend.style.AppStylesheet
 import kotlin.math.min
 
+/**
+ * Value you can pass into [ScreenNavigator.enter] if you want to clear all screens before entering the new one.
+ * This is useful if you want to reset the state back to some root screen, e.g. pressing the "home" button.
+ */
+const val POP_ALL = Int.MAX_VALUE
 interface ScreenNavigator {
     fun enter(screen: Screen, popCount: Int = 0)
     fun back()
 }
+
+fun ScreenNavigator.swapWith(screen: Screen) = enter(screen, popCount = 1)
 
 sealed class Screen {
     @Composable
@@ -31,7 +39,7 @@ sealed class Screen {
 
     object CreateAccount : Screen() {
         @Composable
-        override fun compose(ctx: Context) = Unit
+        override fun compose(ctx: Context) = CreateAccountScreen(ctx)
     }
 
     object Overview : Screen() {
@@ -73,7 +81,7 @@ private class ScreenNavigatorImpl(initialScreen: Screen) : ScreenNavigator {
 
 fun startApp() {
     val navigator = ScreenNavigatorImpl(Screen.Main)
-    val ctx = Context(navigator, HttpMessenger())
+    val ctx = Context(navigator, HttpMessenger(), AppState())
 
     renderComposable(rootElementId = "root") {
         val activeScreen by navigator.activeScreen
