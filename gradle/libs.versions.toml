@@ -1,16 +1,19 @@
 [versions]
+# Production
 kgraphql = "0.17.8"
 kotlin = "1.4.32"
 kotlinx-coroutines = "1.4.3"
+kotlinx-serialization-json = "1.2.1"
 ktor = "1.5.4"
 logback = "1.2.3"
-kotlintest = "3.3.2"
+
+# Test
 junit5 = "5.5.2"
+kotlintest = "3.3.2"
 truthish = "0.6.0"
-kotlinx-serialization-json = "1.2.1"
 
 [libraries]
-# Production libraries
+# Production
 kgraphql-core = { module = "com.apurebase:kgraphql", version.ref = "kgraphql" }
 kgraphql-ktor = { module = "com.apurebase:kgraphql-ktor", version.ref = "kgraphql" }
 
@@ -28,15 +31,18 @@ ktor-serialization = { module = "io.ktor:ktor-serialization", version.ref = "kto
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
-# Test libraries
-kotlintestrunner-junit5 = { module = "io.kotlintest:kotlintest-runner-junit5", version.ref = "kotlintest" }
+# Test
 junit5-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
 junit5-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
+kotlintestrunner-junit5 = { module = "io.kotlintest:kotlintest-runner-junit5", version.ref = "kotlintest" }
 truthish = { module = "com.github.bitspittle:truthish", version.ref = "truthish" }
 
 [bundles]
+# Production
 kgraphql = [ "kgraphql-core", "kgraphql-ktor" ]
 kotlin-jvm = [ "kotlin-stdlib", "kotlinx-coroutines" ]
-junit5 = [ "junit5-engine", "junit5-api", "junit5-params"]
 ktor-common = [ "ktor-core", "ktor-serialization" ]
+
+# Test
+junit5 = [ "junit5-engine", "junit5-api", "junit5-params"]
