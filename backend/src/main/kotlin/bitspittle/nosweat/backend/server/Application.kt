@@ -1,7 +1,7 @@
 package bitspittle.nosweat.backend.server
 
 import bitspittle.nosweat.model.*
-import bitspittle.nosweat.model.graphql.queries.LoginResult
+import bitspittle.nosweat.model.graphql.queries.LoginResponse
 import com.apurebase.kgraphql.GraphQL
 import io.ktor.application.*
 import io.ktor.features.*
@@ -39,16 +39,16 @@ fun Application.module(testing: Boolean = false) {
             type<Routine>()
             type<Workout>()
 
-            unionType<LoginResult>()
+            unionType<LoginResponse>()
             unionType<Weight>()
 
             query("login") {
                 resolver { username: String, password: String ->
                     if (password == "asdf") {
-                        LoginResult.Success(User("asdfasdf", username))
+                        LoginResponse.Success(User("asdfasdf", username))
                     }
                     else {
-                        LoginResult.Error("Username not found or password incorrect")
+                        LoginResponse.Error("Username not found or password incorrect")
                     }
                 }
             }
