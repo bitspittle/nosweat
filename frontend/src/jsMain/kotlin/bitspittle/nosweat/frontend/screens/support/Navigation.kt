@@ -52,7 +52,7 @@ sealed class Screen {
         override fun compose(ctx: Context) = Unit
     }
 
-    object WorkoutComplete : Screen() {
+    object WorkoutSummary : Screen() {
         @Composable
         override fun compose(ctx: Context) = Unit
     }
