@@ -22,10 +22,10 @@ data class CreateAccountMutation(
                 createAccount(username: "$username", password: "$password") {
                     ... on CreateAccountSuccess {
                         user {
-                            id
                             username
+                            secret
                             name
-                            email { value }
+                            email
                         }
                     }
                     ... on CreateAccountError {

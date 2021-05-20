@@ -22,10 +22,10 @@ data class LoginQuery(
                 login(username: "$username", password: "$password") {
                     ... on LoginSuccess {
                         user {
-                            id
                             username
+                            secret
                             name
-                            email { value }
+                            email
                         }
                     }
                     ... on LoginError {

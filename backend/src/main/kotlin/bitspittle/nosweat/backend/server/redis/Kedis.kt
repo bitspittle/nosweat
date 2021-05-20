@@ -1,9 +1,15 @@
 package bitspittle.nosweat.backend.server.redis
 
 import redis.clients.jedis.Jedis
+import java.time.Duration
 
 /** Wrap [Jedis] and provide a more organized, Kotlin-idiomatic API */
 class Kedis(private val jedis: Jedis) {
+    inner class ExpirationMethods {
+        fun expire(key: String, duration: Duration): Boolean = jedis.pexpire(key, duration.toMillis()) == 1L
+        fun timeToLive(key: String) = Duration.ofMillis(jedis.pttl(key))
+    }
+
     inner class MapMethods {
         fun set(key: String, value: String) {
             jedis.set(key, value)
@@ -36,6 +42,7 @@ class Kedis(private val jedis: Jedis) {
         fun difference(vararg keys: String): Set<String> = jedis.sdiff(*keys)
     }
 
+    val expiration = ExpirationMethods()
     val map = MapMethods()
     val numMap = NumMapMethods()
     val hash = HashMethods()
