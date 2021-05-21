@@ -4,8 +4,8 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
-import bitspittle.nosweat.frontend.screens.support.ApplicationScope
 import bitspittle.nosweat.frontend.screens.support.Context
+import bitspittle.nosweat.frontend.screens.support.Screen
 import bitspittle.nosweat.frontend.style.AppStylesheet
 import bitspittle.nosweat.model.graphql.mutations.CreateAccountError
 import bitspittle.nosweat.model.graphql.mutations.CreateAccountMutation
@@ -26,7 +26,7 @@ fun CreateAccountScreen(ctx: Context) {
     }
     var password2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-
+    val scope = rememberCoroutineScope()
 
     Row {
         Column {
@@ -64,14 +64,15 @@ fun CreateAccountScreen(ctx: Context) {
             Button(attrs = {
                 disabled(username.isEmpty() || password1.isEmpty() || password1 != password2)
                 onClick {
-                    val scope = ApplicationScope()
                     scope.launch {
                         errorMessage = ""
                         when (val result = ctx.messenger.send(CreateAccountMutation(username, password1))) {
-                            is CreateAccountSuccess -> ctx.state.user = result.user
+                            is CreateAccountSuccess -> {
+                                ctx.state.user = result.user
+                                ctx.navigator.enter(Screen.Home)
+                            }
                             is CreateAccountError -> errorMessage = result.message
                         }
-                        // TODO: Go to a new screen with the logged in user
                     }
                 }
             }) {

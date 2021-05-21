@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
-import bitspittle.nosweat.frontend.screens.support.ApplicationScope
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
 import bitspittle.nosweat.frontend.screens.support.swapWith
@@ -21,6 +20,7 @@ fun LoginScreen(ctx: Context) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Row {
         Column {
@@ -48,13 +48,14 @@ fun LoginScreen(ctx: Context) {
                 disabled(username.isEmpty() || password.isEmpty())
                 onClick {
                     errorMessage = ""
-                    val scope = ApplicationScope()
                     scope.launch {
                         when (val result = ctx.messenger.send(LoginQuery(username, password))) {
-                            is LoginSuccess -> ctx.state.user = result.user
+                            is LoginSuccess -> {
+                                ctx.state.user = result.user
+                                ctx.navigator.enter(Screen.Home)
+                            }
                             is LoginError -> errorMessage = result.message
                         }
-                        // TODO: Go to a new screen with the logged in user
                     }
                 }
             }) {
