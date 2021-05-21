@@ -79,7 +79,10 @@ fun LoginScreen(ctx: Context) {
                     attrs = {
                         classes(AppStylesheet.clickable)
                         onClick {
-                            ctx.state.username = username
+                            ctx.state.defaults.createAccount.apply {
+                                this.username = username
+                                this.password = password
+                            }
                             ctx.navigator.swapWith(Screen.CreateAccount)
                         }
                     }) {

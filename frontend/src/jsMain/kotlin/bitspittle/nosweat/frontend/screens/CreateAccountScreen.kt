@@ -6,8 +6,6 @@ import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
 import bitspittle.nosweat.frontend.screens.support.ApplicationScope
 import bitspittle.nosweat.frontend.screens.support.Context
-import bitspittle.nosweat.frontend.screens.support.Screen
-import bitspittle.nosweat.frontend.screens.support.swapWith
 import bitspittle.nosweat.frontend.style.AppStylesheet
 import bitspittle.nosweat.model.graphql.mutations.CreateAccountError
 import bitspittle.nosweat.model.graphql.mutations.CreateAccountMutation
@@ -19,10 +17,13 @@ import org.jetbrains.compose.common.foundation.layout.Row
 @Composable
 fun CreateAccountScreen(ctx: Context) {
     var username by remember {
-        mutableStateOf(ctx.state.username ?: "")
-            .also { ctx.state.username = "" }
+        mutableStateOf(ctx.state.defaults.createAccount.username ?: "")
+            .also { ctx.state.defaults.createAccount.username = null }
     }
-    var password1 by remember { mutableStateOf("") }
+    var password1 by remember {
+        mutableStateOf(ctx.state.defaults.createAccount.password ?: "")
+            .also { ctx.state.defaults.createAccount.password = null }
+    }
     var password2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
@@ -46,6 +47,7 @@ fun CreateAccountScreen(ctx: Context) {
                 attrs = {
                     onTextInput { event -> password1 = event.inputValue }
                 }
+
             )
         }
         Column {
