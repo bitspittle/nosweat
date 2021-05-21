@@ -1,6 +1,5 @@
 package bitspittle.nosweat.backend.server.redis
 
-import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 
 /** Wrap [JedisPool] and provide a more organized, Kotlin-idiomatic API */
