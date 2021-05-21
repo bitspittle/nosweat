@@ -100,7 +100,8 @@ fun Application.module(testing: Boolean = false) {
                     log.info("Received request to create account: $username")
 
                     kedisPool.useResource { kedis ->
-                        var userIdKey = kedis.map.get("users:name:$username")
+                        val usernameKey = "users:name:$username"
+                        var userIdKey = kedis.map.get(usernameKey)
                         if (userIdKey != null) {
                             log.info("Account creation failed for: $username. Reason: username already exists")
                             return@useResource CreateAccountError("Username is already taken")
@@ -118,7 +119,7 @@ fun Application.module(testing: Boolean = false) {
                                 "pass.hash" to Password.encode(password.hash),
                             )
                         )
-                        kedis.map.set("users:name:$username", userIdKey)
+                        kedis.map.set(usernameKey, userIdKey)
                         val secret = kedis.updateSecret(username)
                         log.info("Created account for user: $username [key: \"$userIdKey\"]")
 
