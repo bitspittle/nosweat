@@ -9,7 +9,7 @@ import bitspittle.nosweat.frontend.screens.support.Context
 import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
-fun HomeScreen(ctx: Context) {
+fun WelcomeScreen(ctx: Context) {
     val user = remember { requireNotNull(ctx.state.user) }
 
     Row {

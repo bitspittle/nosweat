@@ -6,7 +6,7 @@ import androidx.compose.web.elements.Section
 import androidx.compose.web.renderComposable
 import bitspittle.nosweat.frontend.graphql.HttpMessenger
 import bitspittle.nosweat.frontend.screens.CreateAccountScreen
-import bitspittle.nosweat.frontend.screens.HomeScreen
+import bitspittle.nosweat.frontend.screens.WelcomeScreen
 import bitspittle.nosweat.frontend.screens.LoginScreen
 import bitspittle.nosweat.frontend.screens.MainScreen
 import bitspittle.nosweat.frontend.style.AppStylesheet
@@ -43,9 +43,9 @@ sealed class Screen {
         override fun compose(ctx: Context) = CreateAccountScreen(ctx)
     }
 
-    object Home : Screen() {
+    object Welcome : Screen() {
         @Composable
-        override fun compose(ctx: Context) = HomeScreen(ctx)
+        override fun compose(ctx: Context) = WelcomeScreen(ctx)
     }
 
     object Workout : Screen() {

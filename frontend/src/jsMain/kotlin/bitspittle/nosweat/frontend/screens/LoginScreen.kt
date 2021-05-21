@@ -52,7 +52,7 @@ fun LoginScreen(ctx: Context) {
                         when (val result = ctx.messenger.send(LoginQuery(username, password))) {
                             is LoginSuccess -> {
                                 ctx.state.user = result.user
-                                ctx.navigator.enter(Screen.Home)
+                                ctx.navigator.enter(Screen.Welcome)
                             }
                             is LoginError -> errorMessage = result.message
                         }

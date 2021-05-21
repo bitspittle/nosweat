@@ -69,7 +69,7 @@ fun CreateAccountScreen(ctx: Context) {
                         when (val result = ctx.messenger.send(CreateAccountMutation(username, password1))) {
                             is CreateAccountSuccess -> {
                                 ctx.state.user = result.user
-                                ctx.navigator.enter(Screen.Home)
+                                ctx.navigator.enter(Screen.Welcome)
                             }
                             is CreateAccountError -> errorMessage = result.message
                         }
