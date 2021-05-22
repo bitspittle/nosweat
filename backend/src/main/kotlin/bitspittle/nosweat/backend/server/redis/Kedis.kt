@@ -15,7 +15,7 @@ class Kedis(private val jedis: Jedis) {
         fun persist(key: String): Boolean = jedis.persist(key) == 1L
         fun timeToLive(key: String) = Duration.ofMillis(jedis.pttl(key))
     }
-    abstract inner class AllMapMethods<T> {
+    abstract inner class MapMethodsBase<T> {
         fun exists(key: String): Boolean = jedis.exists(key) && tryParse(jedis.get(key)) != null
         fun set(key: String, value: T, expiresIn: Duration? = null) {
             jedis.set(key, value.toString())
@@ -27,10 +27,10 @@ class Kedis(private val jedis: Jedis) {
         protected abstract fun tryParse(value: String): T?
     }
 
-    inner class MapMethods: AllMapMethods<String>() {
+    inner class MapMethods: MapMethodsBase<String>() {
         override fun tryParse(value: String) = value // Always works
     }
-    inner class NumMapMethods: AllMapMethods<Long>() {
+    inner class NumMapMethods: MapMethodsBase<Long>() {
         fun increment(key: String): Long = jedis.incr(key)
         fun decrement(key: String): Long = jedis.decr(key)
 
