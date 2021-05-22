@@ -6,9 +6,9 @@ import androidx.compose.web.elements.Section
 import androidx.compose.web.renderComposable
 import bitspittle.nosweat.frontend.graphql.HttpMessenger
 import bitspittle.nosweat.frontend.screens.CreateAccountScreen
-import bitspittle.nosweat.frontend.screens.WelcomeScreen
+import bitspittle.nosweat.frontend.screens.HomeScreen
 import bitspittle.nosweat.frontend.screens.LoginScreen
-import bitspittle.nosweat.frontend.screens.MainScreen
+import bitspittle.nosweat.frontend.screens.TitleScreen
 import bitspittle.nosweat.frontend.style.AppStylesheet
 import kotlin.math.min
 
@@ -28,9 +28,9 @@ sealed class Screen {
     @Composable
     internal abstract fun compose(ctx: Context)
 
-    object Main : Screen() {
+    object Title : Screen() {
         @Composable
-        override fun compose(ctx: Context) = MainScreen(ctx)
+        override fun compose(ctx: Context) = TitleScreen(ctx)
     }
 
     object Login : Screen() {
@@ -43,9 +43,9 @@ sealed class Screen {
         override fun compose(ctx: Context) = CreateAccountScreen(ctx)
     }
 
-    object Welcome : Screen() {
+    object Home : Screen() {
         @Composable
-        override fun compose(ctx: Context) = WelcomeScreen(ctx)
+        override fun compose(ctx: Context) = HomeScreen(ctx)
     }
 
     object Workout : Screen() {
@@ -81,7 +81,7 @@ private class ScreenNavigatorImpl(initialScreen: Screen) : ScreenNavigator {
 }
 
 fun startApp() {
-    val navigator = ScreenNavigatorImpl(Screen.Main)
+    val navigator = ScreenNavigatorImpl(Screen.Title)
     val ctx = Context(navigator, HttpMessenger(), AppState())
 
     renderComposable(rootElementId = "root") {
