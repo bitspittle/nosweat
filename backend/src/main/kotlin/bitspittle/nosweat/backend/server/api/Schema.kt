@@ -22,25 +22,21 @@ inline class Username(val value: String) { override fun toString() = value }
 inline class Secret(val value: String) { override fun toString() = value }
 
 object Key {
-    fun secretFrom(id: UserId) = "secrets:id:$id"
     fun idFrom(secret: Secret) = "ids:secret:$secret"
     fun idFrom(username: Username) = "ids:username:$username"
     fun usernameFrom(id: UserId) = "usernames:id:$id"
     fun userFrom(id: UserId) = "users:id:$id"
 }
 
-private fun Kedis.updateSecret(id: UserId): Secret {
-    map.remove(Key.secretFrom(id))?.let { obsoleteSecret ->
-        common.delete(Key.idFrom(Secret(obsoleteSecret)))
-    }
+private val SECRET_DURATION = Duration.ofHours(1)
 
+private fun Kedis.addSecret(id: UserId): Secret {
     val secret = Secret(UUID.randomUUID().toString())
-    val expiresIn = Duration.ofHours(1)
-    map.set(Key.secretFrom(id), secret.value, expiresIn)
-    numMap.set(Key.idFrom(secret), id.value, expiresIn)
+    numMap.set(Key.idFrom(secret), id.value, SECRET_DURATION)
 
     return secret
 }
+private fun Kedis.extend(secret: Secret): Boolean = common.expire(Key.idFrom(secret), SECRET_DURATION)
 
 class SchemaContext(
     val log: Logger,
@@ -84,7 +80,7 @@ private fun SchemaBuilder.registerQueries(ctx: SchemaContext) {
                     val password = Password(password, Password.decode(passSalt))
                     if (password.hash.contentEquals(Password.decode(passHash))) {
                         ctx.log.info("Login successful for: $username [id: \"$id\"]")
-                        val secret = kedis.updateSecret(id)
+                        val secret = kedis.addSecret(id)
                         return@useResource LoginSuccess(User(username.value), secret.value)
                     } else {
                         ctx.log.info("Login failed for: $username [id: \"$id\"]. Reason: bad password")
@@ -129,7 +125,7 @@ private fun SchemaBuilder.registerMutations(ctx: SchemaContext) {
                 kedis.map.set(Key.usernameFrom(id), username.value)
                 kedis.numMap.set(Key.idFrom(username), id.value)
 
-                val secret = kedis.updateSecret(id)
+                val secret = kedis.addSecret(id)
                 ctx.log.info("Created account for user: $username [id: \"$id\"]")
 
                 CreateAccountSuccess(User(username.value), secret.value)
