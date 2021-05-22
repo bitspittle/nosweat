@@ -19,7 +19,6 @@ fun HomeScreen(ctx: Context) {
         Div {
             Button(attrs = {
                 onClick {
-                    ctx.state.user = null
                     ctx.navigator.back()
                 }
             }) {

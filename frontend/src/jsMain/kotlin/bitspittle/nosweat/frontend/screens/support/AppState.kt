@@ -2,11 +2,11 @@ package bitspittle.nosweat.frontend.screens.support
 
 import bitspittle.nosweat.model.User
 
-class AppState(
+data class AppState(
     val defaults: Defaults = Defaults(),
-    var user: User? = null,
+    val user: User? = null,
 ) {
-    class Defaults(
+    data class Defaults(
         val createAccount: CreateAccount = CreateAccount()
     ) {
         class CreateAccount(

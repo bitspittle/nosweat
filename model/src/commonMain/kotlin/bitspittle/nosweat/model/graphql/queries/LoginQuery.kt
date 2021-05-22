@@ -2,6 +2,7 @@ package bitspittle.nosweat.model.graphql.queries
 
 import bitspittle.nosweat.model.User
 import bitspittle.nosweat.model.graphql.Request
+import bitspittle.nosweat.model.json.toPrimitiveContent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -9,7 +10,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 
 sealed class LoginResponse
-class LoginSuccess(val user: User) : LoginResponse()
+class LoginSuccess(val user: User, val secret: String) : LoginResponse()
 class LoginError(val message: String) : LoginResponse()
 
 data class LoginQuery(
@@ -23,10 +24,10 @@ data class LoginQuery(
                     ... on LoginSuccess {
                         user {
                             username
-                            secret
                             name
                             email
                         }
+                        secret
                     }
                     ... on LoginError {
                         message
@@ -37,10 +38,10 @@ data class LoginQuery(
     }
 
     override fun handleResponse(response: JsonObject): LoginResponse {
-        val loginResponse = response["login"] as JsonObject
-        return loginResponse["user"]?.let {
-            LoginSuccess(Json.decodeFromJsonElement(it))
-        } ?: LoginError((loginResponse["message"] as JsonPrimitive).content)
+        val response = response["login"] as JsonObject
+        return response["user"]?.let {
+            LoginSuccess(Json.decodeFromJsonElement(it), response["secret"].toPrimitiveContent())
+        } ?: LoginError(response["message"].toPrimitiveContent())
     }
 }
 

@@ -1,6 +1,6 @@
 package bitspittle.nosweat.model
 
-import bitspittle.nosweat.model.serializers.EmailSerializer
+import bitspittle.nosweat.model.json.serializers.EmailSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable(with = EmailSerializer::class)

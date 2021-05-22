@@ -1,4 +1,4 @@
-package bitspittle.nosweat.model.serializers
+package bitspittle.nosweat.model.json.serializers
 
 import bitspittle.nosweat.model.Email
 import com.github.bitspittle.truthish.assertThat

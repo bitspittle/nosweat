@@ -10,6 +10,7 @@ import bitspittle.nosweat.frontend.screens.HomeScreen
 import bitspittle.nosweat.frontend.screens.LoginScreen
 import bitspittle.nosweat.frontend.screens.TitleScreen
 import bitspittle.nosweat.frontend.style.AppStylesheet
+import bitspittle.nosweat.model.graphql.Messenger
 import kotlin.math.min
 
 /**
@@ -17,9 +18,11 @@ import kotlin.math.min
  * This is useful if you want to reset the state back to some root screen, e.g. pressing the "home" button.
  */
 const val POP_ALL = Int.MAX_VALUE
+
 interface ScreenNavigator {
     fun enter(screen: Screen, popCount: Int = 0)
     fun back()
+    fun forward()
 }
 
 fun ScreenNavigator.swapWith(screen: Screen) = enter(screen, popCount = 1)
@@ -59,37 +62,54 @@ sealed class Screen {
     }
 }
 
-private class ScreenNavigatorImpl(initialScreen: Screen) : ScreenNavigator {
-    private val backStack = mutableListOf(initialScreen)
+private class ScreenNavigatorImpl(messenger: Messenger, initialScreen: Screen, initialState: AppState = AppState()) : ScreenNavigator {
+    val ctx = Context(this, messenger, initialState)
+
+    private val backStack = mutableListOf(initialScreen to initialState)
+    private val forwardStack = mutableListOf<Pair<Screen, AppState>>()
+
     private var _activeScreen = mutableStateOf(initialScreen)
     val activeScreen: State<Screen> = _activeScreen
 
     override fun enter(screen: Screen, popCount: Int) {
-        require(popCount >= 0) { "Invalid pop count: $popCount"}
+        require(popCount >= 0) { "Invalid pop count: $popCount" }
 
         for (i in 0 until min(popCount, backStack.size)) backStack.removeLast()
-        backStack.add(screen)
+        forwardStack.clear()
+        backStack.add(screen to ctx.state)
         _activeScreen.value = screen
     }
 
     override fun back() {
         if (backStack.size >= 2) {
-            backStack.removeLast()
-            _activeScreen.value = backStack.last()
+            forwardStack.add(0, backStack.removeLast())
+
+            val savedScreenState = backStack.last()
+            ctx.state = savedScreenState.second
+            _activeScreen.value = savedScreenState.first
         }
+    }
+
+    override fun forward() {
+        if (forwardStack.isEmpty()) return
+
+        backStack.add(_activeScreen.value to ctx.state)
+
+        val savedScreenstate = forwardStack.removeAt(0)
+        ctx.state = savedScreenstate.second
+        _activeScreen.value = savedScreenstate.first
     }
 }
 
 fun startApp() {
-    val navigator = ScreenNavigatorImpl(Screen.Title)
-    val ctx = Context(navigator, HttpMessenger(), AppState())
+    val navigator = ScreenNavigatorImpl(HttpMessenger(), Screen.Title)
 
     renderComposable(rootElementId = "root") {
         val activeScreen by navigator.activeScreen
 
         Style(AppStylesheet)
         Section(attrs = { classes(AppStylesheet.container) }) {
-            activeScreen.compose(ctx)
+            activeScreen.compose(navigator.ctx)
         }
     }
 }

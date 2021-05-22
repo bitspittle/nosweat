@@ -5,41 +5,61 @@ import java.time.Duration
 
 /** Wrap [Jedis] and provide a more organized, Kotlin-idiomatic API */
 class Kedis(private val jedis: Jedis) {
-    inner class ExpirationMethods {
-        fun expire(key: String, duration: Duration): Boolean = jedis.pexpire(key, duration.toMillis()) == 1L
+    /** Methods that work across multiple data structure types */
+    inner class CommonMethods {
+        fun delete(key: String): Boolean = jedis.del(key) == 1L
+        fun expire(key: String, duration: Duration): Boolean {
+            require(duration.toMillis() >= 1)
+            return (jedis.pexpire(key, duration.toMillis()) == 1L)
+        }
+        fun persist(key: String): Boolean = jedis.persist(key) == 1L
         fun timeToLive(key: String) = Duration.ofMillis(jedis.pttl(key))
     }
-    inner class MapMethods {
-        fun set(key: String, value: String) { jedis.set(key, value) }
-        fun get(key: String): String? = jedis.get(key)
-        fun expire(key: String, secs: Long): Boolean = jedis.expire(key, secs) == 1L
-        fun expireMs(key: String, secs: Long): Boolean = jedis.expire(key, secs) == 1L
+    abstract inner class AllMapMethods<T> {
+        fun exists(key: String): Boolean = jedis.exists(key) && tryParse(jedis.get(key)) != null
+        fun set(key: String, value: T, expiresIn: Duration? = null) {
+            jedis.set(key, value.toString())
+            expiresIn?.let { common.expire(key, it) }
+        }
+        fun get(key: String): T? = if (jedis.exists(key)) tryParse(jedis.get(key)) else null
+        fun remove(key: String): T? = get(key)?.also { common.delete(key) }
+
+        protected abstract fun tryParse(value: String): T?
     }
-    inner class NumMapMethods {
-        fun set(key: String, value: Long) { jedis.set(key, value.toString()) }
-        fun get(key: String): Long? = jedis.get(key).toLongOrNull()
+
+    inner class MapMethods: AllMapMethods<String>() {
+        override fun tryParse(value: String) = value // Always works
+    }
+    inner class NumMapMethods: AllMapMethods<Long>() {
         fun increment(key: String): Long = jedis.incr(key)
         fun decrement(key: String): Long = jedis.decr(key)
+
+        override fun tryParse(value: String) = value.toLongOrNull()
     }
     inner class HashMethods {
-        fun set(key: String, values: Map<String, String>) { jedis.hmset(key, values) }
+        fun exists(key: String, field: String) = jedis.hexists(key, field)
+        fun set(key: String, values: Map<String, String>, expiresIn: Duration? = null) {
+            jedis.hmset(key, values)
+            expiresIn?.let { common.expire(key, it) }
+        }
         fun get(key: String, vararg fields: String): List<String> = jedis.hmget(key, *fields)
+        fun remove(key: String): List<String> = get(key).also { common.delete(key) }
     }
     inner class SetMethods {
         fun add(key: String, vararg members: String) { jedis.sadd(key, *members) }
         fun contains(key: String, value: String) = jedis.sismember(key, value)
         fun members(key: String): Set<String> = jedis.smembers(key)
         fun size(key: String): Long = jedis.scard(key)
+        fun remove(key: String): Set<String> = members(key).also { common.delete(key) }
         fun intersection(vararg keys: String): Set<String> = jedis.sinter(*keys)
         fun difference(vararg keys: String): Set<String> = jedis.sdiff(*keys)
     }
 
-    val expiration = ExpirationMethods()
+    val common = CommonMethods()
     val map = MapMethods()
     val numMap = NumMapMethods()
     val hash = HashMethods()
     val set = SetMethods()
 }
 fun Jedis.toKedis() = Kedis(this)
-
 

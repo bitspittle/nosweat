@@ -1,4 +1,4 @@
-package bitspittle.nosweat.backend.server.account
+package bitspittle.nosweat.backend.server.api
 
 import java.security.SecureRandom
 import java.util.*
@@ -25,4 +25,6 @@ class Password(val value: String, saltOverride: ByteArray? = null) {
         val factory = SecretKeyFactory.getInstance(HASH_ALGO)
         factory.generateSecret(spec).encoded
     }
+
+    override fun toString() = "${encode(salt)}:${encode(hash)}"
 }

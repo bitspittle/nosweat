@@ -2,6 +2,7 @@ package bitspittle.nosweat.model.graphql.mutations
 
 import bitspittle.nosweat.model.User
 import bitspittle.nosweat.model.graphql.Request
+import bitspittle.nosweat.model.json.toPrimitiveContent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -9,7 +10,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 
 sealed class CreateAccountResponse
-class CreateAccountSuccess(val user: User) : CreateAccountResponse()
+class CreateAccountSuccess(val user: User, val secret: String) : CreateAccountResponse()
 class CreateAccountError(val message: String) : CreateAccountResponse()
 
 data class CreateAccountMutation(
@@ -23,10 +24,10 @@ data class CreateAccountMutation(
                     ... on CreateAccountSuccess {
                         user {
                             username
-                            secret
                             name
                             email
                         }
+                        secret
                     }
                     ... on CreateAccountError {
                         message
@@ -37,10 +38,10 @@ data class CreateAccountMutation(
     }
 
     override fun handleResponse(response: JsonObject): CreateAccountResponse {
-        val loginResponse = response["createAccount"] as JsonObject
-        return loginResponse["user"]?.let {
-            CreateAccountSuccess(Json.decodeFromJsonElement(it))
-        } ?: CreateAccountError((loginResponse["message"] as JsonPrimitive).content)
+        val response = response["createAccount"] as JsonObject
+        return response["user"]?.let {
+            CreateAccountSuccess(Json.decodeFromJsonElement(it), response["secret"].toPrimitiveContent())
+        } ?: CreateAccountError(response["message"].toPrimitiveContent())
     }
 }
 

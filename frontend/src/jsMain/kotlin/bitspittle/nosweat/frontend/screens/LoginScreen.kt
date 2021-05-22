@@ -51,8 +51,8 @@ fun LoginScreen(ctx: Context) {
                     scope.launch {
                         when (val result = ctx.messenger.send(LoginQuery(username, password))) {
                             is LoginSuccess -> {
-                                ctx.state.user = result.user
-                                ctx.navigator.enter(Screen.Home)
+                                ctx.state = ctx.state.copy(user = result.user)
+                                ctx.navigator.swapWith(Screen.Home)
                             }
                             is LoginError -> errorMessage = result.message
                         }

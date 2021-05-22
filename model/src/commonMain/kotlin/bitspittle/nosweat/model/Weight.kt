@@ -1,6 +1,6 @@
 package bitspittle.nosweat.model
 
-import bitspittle.nosweat.model.serializers.WeightSerializer
+import bitspittle.nosweat.model.json.serializers.WeightSerializer
 import kotlinx.serialization.Serializable
 import kotlin.math.roundToInt
 
