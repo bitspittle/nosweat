@@ -22,10 +22,10 @@ inline class Username(val value: String) { override fun toString() = value }
 inline class Secret(val value: String) { override fun toString() = value }
 
 object Key {
-    fun idFrom(secret: Secret) = "ids:secret:$secret"
-    fun idFrom(username: Username) = "ids:username:$username"
-    fun usernameFrom(id: UserId) = "usernames:id:$id"
-    fun userFrom(id: UserId) = "users:id:$id"
+    fun idFrom(secret: Secret) = "ids/secret:$secret"
+    fun idFrom(username: Username) = "ids/username:$username"
+    fun usernameFrom(id: UserId) = "usernames/id:$id"
+    fun userFrom(id: UserId) = "users/id:$id"
 }
 
 private val SECRET_DURATION = Duration.ofHours(1)
