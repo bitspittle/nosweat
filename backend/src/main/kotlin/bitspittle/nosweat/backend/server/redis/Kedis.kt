@@ -8,20 +8,23 @@ class Kedis(private val jedis: Jedis) {
     /** Methods that work across multiple data structure types */
     inner class CommonMethods {
         fun delete(key: String): Boolean = jedis.del(key) == 1L
+
         fun expire(key: String, duration: Duration): Boolean {
             require(duration.toMillis() >= 1)
             return (jedis.pexpire(key, duration.toMillis()) == 1L)
         }
         fun persist(key: String): Boolean = jedis.persist(key) == 1L
-        fun timeToLive(key: String) = Duration.ofMillis(jedis.pttl(key))
+        fun timeToLive(key: String): Duration = Duration.ofMillis(jedis.pttl(key))
     }
     abstract inner class MapMethodsBase<T> {
-        fun exists(key: String): Boolean = jedis.exists(key) && tryParse(jedis.get(key)) != null
-        fun set(key: String, value: T, expiresIn: Duration? = null) {
-            jedis.set(key, value.toString())
-            expiresIn?.let { common.expire(key, it) }
+        fun contains(key: String): Boolean = jedis.exists(key) && tryParse(jedis.get(key)) != null
+        operator fun set(key: String, value: T) { jedis.set(key, value.toString()) }
+        fun set(key: String, value: T, expiresIn: Duration) {
+            this[key] = value
+            common.expire(key, expiresIn)
         }
-        fun get(key: String): T? = if (jedis.exists(key)) tryParse(jedis.get(key)) else null
+        operator fun get(key: String): T? = if (jedis.exists(key)) tryParse(jedis.get(key)) else null
+        /** Like [CommonMethods.delete] but returns the value that was removed. */
         fun remove(key: String): T? = get(key)?.also { common.delete(key) }
 
         protected abstract fun tryParse(value: String): T?
@@ -37,20 +40,29 @@ class Kedis(private val jedis: Jedis) {
         override fun tryParse(value: String) = value.toLongOrNull()
     }
     inner class HashMethods {
-        fun exists(key: String, field: String) = jedis.hexists(key, field)
-        fun set(key: String, values: Map<String, String>, expiresIn: Duration? = null) {
-            jedis.hmset(key, values)
-            expiresIn?.let { common.expire(key, it) }
+        fun contains(key: String, field: String): Boolean = jedis.hexists(key, field)
+        operator fun set(key: String, values: Map<String, String>) { jedis.hmset(key, values) }
+        fun set(key: String, values: Map<String, String>, expiresIn: Duration) {
+            this[key] = values
+            common.expire(key, expiresIn)
         }
-        fun get(key: String, vararg fields: String): List<String> = jedis.hmget(key, *fields)
+        operator fun get(key: String, vararg fields: String): List<String> = jedis.hmget(key, *fields)
+        /** Like [CommonMethods.delete] but returns the value that was removed. */
         fun remove(key: String): List<String> = get(key).also { common.delete(key) }
     }
     inner class SetMethods {
+        fun contains(key: String, member: String): Boolean = jedis.sismember(key, member)
         fun add(key: String, vararg members: String) { jedis.sadd(key, *members) }
-        fun contains(key: String, value: String) = jedis.sismember(key, value)
-        fun members(key: String): Set<String> = jedis.smembers(key)
+        operator fun set(key: String, members: Collection<String>) { this[key] = members.toTypedArray() }
+        operator fun set(key: String, members: Array<String>) {
+            common.delete(key)
+            add(key, *members)
+        }
+        operator fun get(key: String): Set<String> = jedis.smembers(key)
         fun size(key: String): Long = jedis.scard(key)
-        fun remove(key: String): Set<String> = members(key).also { common.delete(key) }
+        /** Like [CommonMethods.delete] but returns the value that was removed. */
+        fun remove(key: String): Set<String> = this[key].also { common.delete(key) }
+
         fun intersection(vararg keys: String): Set<String> = jedis.sinter(*keys)
         fun difference(vararg keys: String): Set<String> = jedis.sdiff(*keys)
     }
