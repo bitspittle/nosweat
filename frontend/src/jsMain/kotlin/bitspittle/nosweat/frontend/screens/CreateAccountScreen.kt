@@ -80,13 +80,6 @@ fun CreateAccountScreen(ctx: Context) {
                 Text("Create Account")
             }
         }
-        Div {
-            Button(attrs = {
-                onClick { ctx.navigator.back() }
-            }) {
-                Text("Back")
-            }
-        }
 
         if (errorMessage.isNotBlank()) {
             Div(attrs = { classes(AppStylesheet.error) }) {

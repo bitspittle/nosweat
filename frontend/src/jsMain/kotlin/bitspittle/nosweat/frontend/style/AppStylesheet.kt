@@ -3,9 +3,16 @@ package bitspittle.nosweat.frontend.style
 import androidx.compose.web.css.*
 
 object AppStylesheet : StyleSheet() {
+    init {
+        "html, body, #root" style {
+            height(100.percent)
+            margin(0.px)
+        }
+    }
+
+
     val container by style {
         display(DisplayStyle.Flex)
-        justifyContent(JustifyContent.Center)
     }
 
     val title by style {
@@ -17,6 +24,12 @@ object AppStylesheet : StyleSheet() {
     val subtitle by style {
         fontSize(30.px)
         fontWeight(FontWeight.LIGHTER)
+        textAlign(TextAlign.CENTER)
+    }
+
+    val sideArrow by style {
+        fontSize(80.px)
+        fontWeight(FontWeight.BOLD)
         textAlign(TextAlign.CENTER)
     }
 

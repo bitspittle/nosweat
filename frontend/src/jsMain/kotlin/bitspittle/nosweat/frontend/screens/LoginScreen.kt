@@ -62,13 +62,6 @@ fun LoginScreen(ctx: Context) {
                 Text("Log In")
             }
         }
-        Div {
-            Button(attrs = {
-                onClick { ctx.navigator.back() }
-            }) {
-                Text("Back")
-            }
-        }
 
         if (errorMessage.isNotBlank()) {
             Div {

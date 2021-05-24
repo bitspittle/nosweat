@@ -3,14 +3,11 @@ package bitspittle.nosweat.frontend.screens
 import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
-import androidx.compose.web.elements.*
+import androidx.compose.web.elements.Button
+import androidx.compose.web.elements.Div
+import androidx.compose.web.elements.Input
+import androidx.compose.web.elements.Text
 import bitspittle.nosweat.frontend.screens.support.Context
-import bitspittle.nosweat.frontend.screens.support.Screen
-import bitspittle.nosweat.frontend.style.AppStylesheet
-import bitspittle.nosweat.model.graphql.mutations.CreateAccountError
-import bitspittle.nosweat.model.graphql.mutations.CreateAccountMutation
-import bitspittle.nosweat.model.graphql.mutations.CreateAccountSuccess
-import bitspittle.nosweat.model.graphql.mutations.UpdateExerciseMutation
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
@@ -53,13 +50,6 @@ fun UpdateExerciseScreen(ctx: Context) {
                 }
             }) {
                 Text("Create Account")
-            }
-        }
-        Div {
-            Button(attrs = {
-                onClick { ctx.navigator.back() }
-            }) {
-                Text("Back")
             }
         }
     }
