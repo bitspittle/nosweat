@@ -2,8 +2,6 @@ package bitspittle.nosweat.frontend.screens.support
 
 import androidx.compose.runtime.*
 import androidx.compose.web.css.*
-import androidx.compose.web.css.selectors.attr
-import androidx.compose.web.elements.Div
 import androidx.compose.web.elements.Section
 import androidx.compose.web.elements.Span
 import androidx.compose.web.elements.Text
@@ -19,21 +17,33 @@ import bitspittle.nosweat.frontend.style.cursor
 import bitspittle.nosweat.model.graphql.Messenger
 import kotlin.math.min
 
-/**
- * Value you can pass into [ScreenNavigator.enter] if you want to clear all screens before entering the new one.
- * This is useful if you want to reset the state back to some root screen, e.g. pressing the "home" button.
- */
-const val POP_ALL = Int.MAX_VALUE
-
 interface ScreenNavigator {
     val canGoBack: Boolean
     val canGoForward: Boolean
 
-    fun enter(screen: Screen, popCount: Int = 0)
+    /**
+     * Enter a new screen.
+     *
+     * Before entering, however, remove items from the backstack until [popWhile] return false.
+     * This is useful, for example, if you have a series of screens where you are collecting
+     * information from the user that, once submitted, you don't want to leave in the back stack
+     * (think, in a game, going from title screen through player options to starting the game --
+     * when you exit the game, you should go back to the title screen.
+     */
+    fun enter(screen: Screen, popWhile: (Screen) -> Boolean = { false })
     fun back()
     fun forward()
 }
 
+fun ScreenNavigator.enter(screen: Screen, popCount: Int) {
+    require(popCount >= 1) { "Invalid pop count: $popCount" }
+
+    var popCount = popCount
+    enter(screen) {
+        popCount--
+        popCount >= 0
+    }
+}
 fun ScreenNavigator.swapWith(screen: Screen) = enter(screen, popCount = 1)
 
 sealed class Screen {
@@ -91,11 +101,11 @@ private class ScreenNavigatorImpl(messenger: Messenger, initialScreen: Screen, i
     override val canGoBack get() = backStack.size > 1
     override val canGoForward get() = forwardStack.isNotEmpty()
 
-    override fun enter(screen: Screen, popCount: Int) {
-        require(popCount >= 0) { "Invalid pop count: $popCount" }
-
+    override fun enter(screen: Screen, popWhile: (Screen) -> Boolean) {
         backStack.add(_activeScreen.value to ctx.state)
-        for (i in 0 until min(popCount, backStack.size)) backStack.removeLast()
+        while (backStack.isNotEmpty() && popWhile(backStack.last().first)) {
+            backStack.removeLast()
+        }
         forwardStack.clear()
 
         updateActiveScreen(screen)
