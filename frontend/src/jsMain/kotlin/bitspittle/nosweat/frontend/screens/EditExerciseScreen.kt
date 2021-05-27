@@ -3,20 +3,27 @@ package bitspittle.nosweat.frontend.screens
 import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
-import androidx.compose.web.elements.Button
-import androidx.compose.web.elements.Div
-import androidx.compose.web.elements.Input
-import androidx.compose.web.elements.Text
+import androidx.compose.web.elements.*
 import bitspittle.nosweat.frontend.screens.support.Context
+import bitspittle.nosweat.frontend.style.AppStylesheet
+import bitspittle.nosweat.model.graphql.mutations.CreateExerciseError
+import bitspittle.nosweat.model.graphql.mutations.CreateExerciseMutation
+import bitspittle.nosweat.model.graphql.mutations.CreateExerciseSuccess
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
-fun UpdateExerciseScreen(ctx: Context) {
+fun EditExerciseScreen(ctx: Context) {
+    val loggedIn = remember { requireNotNull(ctx.state.loggedIn) }
+
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+
     val scope = rememberCoroutineScope()
+
+    // TODO, support configuring with existing exercise
 
     Row {
         Column {
@@ -44,12 +51,27 @@ fun UpdateExerciseScreen(ctx: Context) {
                 disabled(name.isEmpty())
                 onClick {
                     scope.launch {
-//                        when (val result = ctx.messenger.send(UpdateExerciseMutation("")) {
-//                        }
+                        when (val result = ctx.messenger.send(CreateExerciseMutation(loggedIn.secret, name, description))) {
+                            is CreateExerciseSuccess -> {
+                                ctx.navigator.back()
+                            }
+
+                            is CreateExerciseError -> {
+                                errorMessage = result.message
+                            }
+                        }
                     }
                 }
             }) {
-                Text("Create Account")
+                Text("Submit")
+            }
+        }
+
+        if (errorMessage.isNotBlank()) {
+            Div {
+                Span(attrs = { classes(AppStylesheet.error) }) {
+                    Text(errorMessage)
+                }
             }
         }
     }

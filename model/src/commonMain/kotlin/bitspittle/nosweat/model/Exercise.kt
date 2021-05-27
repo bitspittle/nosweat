@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Exercise(
     val id: String,
     val name: String,
-    val desc: String,
+    val desc: String?,
+    val owner: String,
 )

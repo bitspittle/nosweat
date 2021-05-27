@@ -7,10 +7,7 @@ import androidx.compose.web.elements.Span
 import androidx.compose.web.elements.Text
 import androidx.compose.web.renderComposable
 import bitspittle.nosweat.frontend.graphql.HttpMessenger
-import bitspittle.nosweat.frontend.screens.CreateAccountScreen
-import bitspittle.nosweat.frontend.screens.HomeScreen
-import bitspittle.nosweat.frontend.screens.LoginScreen
-import bitspittle.nosweat.frontend.screens.TitleScreen
+import bitspittle.nosweat.frontend.screens.*
 import bitspittle.nosweat.frontend.style.AppStylesheet
 import bitspittle.nosweat.frontend.style.Cursor
 import bitspittle.nosweat.frontend.style.cursor
@@ -68,6 +65,11 @@ sealed class Screen {
     object Home : Screen() {
         @Composable
         override fun compose(ctx: Context) = HomeScreen(ctx)
+    }
+
+    object EditExercise : Screen() {
+        @Composable
+        override fun compose(ctx: Context) = EditExerciseScreen(ctx)
     }
 
     object Workout : Screen() {

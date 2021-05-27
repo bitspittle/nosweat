@@ -47,6 +47,8 @@ class Kedis(private val jedis: Jedis) {
             common.expire(key, expiresIn)
         }
         operator fun get(key: String, vararg fields: String): List<String> = jedis.hmget(key, *fields)
+        fun getAll(key: String): Map<String, String> = jedis.hgetAll(key)
+
         /** Like [CommonMethods.delete] but returns the value that was removed. */
         fun remove(key: String): List<String> = get(key).also { common.delete(key) }
     }

@@ -4,7 +4,7 @@ import bitspittle.nosweat.model.User
 
 data class AppState(
     val defaults: Defaults = Defaults(),
-    val user: User? = null,
+    val loggedIn: LoggedIn? = null,
 ) {
     data class Defaults(
         val createAccount: CreateAccount = CreateAccount()
@@ -14,4 +14,9 @@ data class AppState(
             var password: String? = null,
         )
     }
+
+    data class LoggedIn(
+        val user: User,
+        val secret: String
+    )
 }
