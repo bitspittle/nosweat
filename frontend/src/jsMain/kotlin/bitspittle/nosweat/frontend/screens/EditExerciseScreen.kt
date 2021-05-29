@@ -15,7 +15,7 @@ import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
 fun EditExerciseScreen(ctx: Context) {
-    val loggedIn = remember { requireNotNull(ctx.state.loggedIn) }
+    val credentials = remember { requireNotNull(ctx.state.credentials) }
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -51,7 +51,7 @@ fun EditExerciseScreen(ctx: Context) {
                 disabled(name.isEmpty())
                 onClick {
                     scope.launch {
-                        when (val result = ctx.messenger.send(CreateExerciseMutation(loggedIn.secret, name, description))) {
+                        when (val result = ctx.messenger.send(CreateExerciseMutation(credentials.secret, name, description))) {
                             is CreateExerciseSuccess -> {
                                 ctx.navigator.back()
                             }

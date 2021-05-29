@@ -8,18 +8,17 @@ import androidx.compose.web.elements.Div
 import androidx.compose.web.elements.Text
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
-import bitspittle.nosweat.frontend.screens.support.swapWith
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
 fun HomeScreen(ctx: Context) {
-    val loggedIn = remember { requireNotNull(ctx.state.loggedIn) }
+    val credentials = remember { requireNotNull(ctx.state.credentials) }
     val scope = rememberCoroutineScope()
 
     Row {
         Div {
-            Text("Welcome ${loggedIn.user.username}")
+            Text("Welcome ${credentials.user.username}")
         }
         Div {
             Button(attrs = {

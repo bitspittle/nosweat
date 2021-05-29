@@ -4,8 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
-import bitspittle.nosweat.frontend.screens.support.AppState
-import bitspittle.nosweat.frontend.screens.support.AppState.LoggedIn
+import bitspittle.nosweat.frontend.screens.support.AppState.Credentials
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
 import bitspittle.nosweat.frontend.screens.support.swapWith
@@ -20,12 +19,12 @@ import org.jetbrains.compose.common.foundation.layout.Row
 @Composable
 fun CreateAccountScreen(ctx: Context) {
     var username by remember {
-        mutableStateOf(ctx.state.defaults.createAccount.username ?: "")
-            .also { ctx.state.defaults.createAccount.username = null }
+        mutableStateOf(ctx.state.screens.createAccount.username ?: "")
+            .also { ctx.state.screens.createAccount.username = null }
     }
     var password1 by remember {
-        mutableStateOf(ctx.state.defaults.createAccount.password ?: "")
-            .also { ctx.state.defaults.createAccount.password = null }
+        mutableStateOf(ctx.state.screens.createAccount.password ?: "")
+            .also { ctx.state.screens.createAccount.password = null }
     }
     var password2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -71,7 +70,7 @@ fun CreateAccountScreen(ctx: Context) {
                         errorMessage = ""
                         when (val result = ctx.messenger.send(CreateAccountMutation(username, password1))) {
                             is CreateAccountSuccess -> {
-                                ctx.state = ctx.state.copy(loggedIn = LoggedIn(result.user, result.secret))
+                                ctx.state = ctx.state.copy(credentials = Credentials(result.user, result.secret))
                                 ctx.navigator.swapWith(Screen.Home)
                             }
                             is CreateAccountError -> errorMessage = result.message

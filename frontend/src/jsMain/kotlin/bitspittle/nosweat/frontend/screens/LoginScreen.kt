@@ -4,8 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
-import bitspittle.nosweat.frontend.screens.support.AppState
-import bitspittle.nosweat.frontend.screens.support.AppState.LoggedIn
+import bitspittle.nosweat.frontend.screens.support.AppState.Credentials
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
 import bitspittle.nosweat.frontend.screens.support.swapWith
@@ -53,7 +52,7 @@ fun LoginScreen(ctx: Context) {
                     scope.launch {
                         when (val result = ctx.messenger.send(LoginQuery(username, password))) {
                             is LoginSuccess -> {
-                                ctx.state = ctx.state.copy(loggedIn = LoggedIn(result.user, result.secret))
+                                ctx.state = ctx.state.copy(credentials = Credentials(result.user, result.secret))
                                 ctx.navigator.swapWith(Screen.Home)
                             }
                             is LoginError -> errorMessage = result.message
@@ -75,7 +74,7 @@ fun LoginScreen(ctx: Context) {
                     attrs = {
                         classes(AppStylesheet.clickable)
                         onClick {
-                            ctx.state.defaults.createAccount.apply {
+                            ctx.state.screens.createAccount.apply {
                                 this.username = username
                                 this.password = password
                             }

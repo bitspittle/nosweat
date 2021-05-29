@@ -3,10 +3,10 @@ package bitspittle.nosweat.frontend.screens.support
 import bitspittle.nosweat.model.User
 
 data class AppState(
-    val defaults: Defaults = Defaults(),
-    val loggedIn: LoggedIn? = null,
+    val screens: Screens = Screens(),
+    val credentials: Credentials? = null,
 ) {
-    data class Defaults(
+    data class Screens(
         val createAccount: CreateAccount = CreateAccount()
     ) {
         class CreateAccount(
@@ -15,7 +15,7 @@ data class AppState(
         )
     }
 
-    data class LoggedIn(
+    data class Credentials(
         val user: User,
         val secret: String
     )
