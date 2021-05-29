@@ -1,6 +1,7 @@
 package bitspittle.nosweat.model.graphql.queries
 
 import bitspittle.nosweat.model.Exercise
+import bitspittle.nosweat.model.graphql.Properties
 import bitspittle.nosweat.model.graphql.Request
 import bitspittle.nosweat.model.json.decode
 import bitspittle.nosweat.model.json.toPrimitiveContent
@@ -18,7 +19,7 @@ data class ExerciseQuery(
             query ExerciseQuery {
                 exercise(exerciseId: "$exerciseId") {
                     ... on ExerciseSuccess {
-                        exercise
+                        ${Properties.EXERCISE}
                     }
                     ... on ExerciseError {
                         message

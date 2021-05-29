@@ -1,6 +1,7 @@
 package bitspittle.nosweat.model.graphql.mutations
 
 import bitspittle.nosweat.model.User
+import bitspittle.nosweat.model.graphql.Properties
 import bitspittle.nosweat.model.graphql.Request
 import bitspittle.nosweat.model.json.decode
 import bitspittle.nosweat.model.json.toPrimitiveContent
@@ -20,10 +21,7 @@ data class CreateAccountMutation(
             mutation CreateAccountMutation {
                 createAccount(username: "$username", password: "$password") {
                     ... on CreateAccountSuccess {
-                        user {
-                            id
-                            username
-                        }
+                        ${Properties.USER}
                         secret
                     }
                     ... on CreateAccountError {

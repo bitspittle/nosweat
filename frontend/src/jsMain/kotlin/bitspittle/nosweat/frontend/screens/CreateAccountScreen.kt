@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
+import bitspittle.nosweat.frontend.screens.support.AppState
 import bitspittle.nosweat.frontend.screens.support.AppState.Credentials
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
@@ -18,14 +19,12 @@ import org.jetbrains.compose.common.foundation.layout.Row
 
 @Composable
 fun CreateAccountScreen(ctx: Context) {
-    var username by remember {
-        mutableStateOf(ctx.state.screens.createAccount.username ?: "")
-            .also { ctx.state.screens.createAccount.username = null }
+    val createAccountState = remember {
+        ctx.state.createAccount
+            .also { ctx.state = ctx.state.copy(createAccount = AppState.CreateAccount()) }
     }
-    var password1 by remember {
-        mutableStateOf(ctx.state.screens.createAccount.password ?: "")
-            .also { ctx.state.screens.createAccount.password = null }
-    }
+    var username by remember { mutableStateOf(createAccountState.username ?: "") }
+    var password1 by remember { mutableStateOf(createAccountState.password ?: "") }
     var password2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()

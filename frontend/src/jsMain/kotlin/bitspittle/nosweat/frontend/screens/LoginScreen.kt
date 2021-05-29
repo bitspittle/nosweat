@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.web.attributes.InputType
 import androidx.compose.web.attributes.disabled
 import androidx.compose.web.elements.*
+import bitspittle.nosweat.frontend.screens.support.AppState
 import bitspittle.nosweat.frontend.screens.support.AppState.Credentials
 import bitspittle.nosweat.frontend.screens.support.Context
 import bitspittle.nosweat.frontend.screens.support.Screen
@@ -74,10 +75,7 @@ fun LoginScreen(ctx: Context) {
                     attrs = {
                         classes(AppStylesheet.clickable)
                         onClick {
-                            ctx.state.screens.createAccount.apply {
-                                this.username = username
-                                this.password = password
-                            }
+                            ctx.state = ctx.state.copy(createAccount = AppState.CreateAccount(username, password))
                             ctx.navigator.swapWith(Screen.CreateAccount)
                         }
                     }) {

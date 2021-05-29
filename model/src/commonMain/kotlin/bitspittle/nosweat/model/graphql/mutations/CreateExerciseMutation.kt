@@ -1,6 +1,7 @@
 package bitspittle.nosweat.model.graphql.mutations
 
 import bitspittle.nosweat.model.Exercise
+import bitspittle.nosweat.model.graphql.Properties
 import bitspittle.nosweat.model.graphql.Request
 import bitspittle.nosweat.model.json.decode
 import bitspittle.nosweat.model.json.toPrimitiveContent
@@ -16,12 +17,7 @@ data class CreateExerciseMutation(val secret: String, val name: String, val desc
             mutation CreateExerciseMutation {
                 createExercise(secret: "$secret", name: "$name", desc: "$desc") {
                     ... on CreateExerciseSuccess {
-                        exercise {
-                            id
-                            name
-                            desc
-                            owner
-                        }
+                        ${Properties.EXERCISE}
                     }
                     ... on CreateExerciseError {
                         message
